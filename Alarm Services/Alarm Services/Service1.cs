@@ -131,7 +131,7 @@ namespace Alarm_Services
                         String sen_id = sen_id_set.Tables[0].Rows[0][0].ToString().Trim();
                         condition[sen_id + "" + ds.Tables[0].Rows[i]["Station_Shef_Code"].ToString().Trim()] = true;
                     }
-                    if (dn.Tables[0].Rows.Count > 0) 
+                    if (dn.Tables[0].Rows.Count > 0)
                     {
                         if (dn.Tables[0].Rows[0]["AlarmType"].ToString() == "multiple")
                         {
@@ -148,12 +148,12 @@ namespace Alarm_Services
                             multialarm(dt);
                         }
                     }
-                    
+
                     for (int i = 0; i < ds.Tables[0].Rows.Count; i++)//loop in datatable 
                     {
-                        
+
                         if (ds.Tables[0].Rows[i]["AlarmType"].ToString() == "single")
-                            {
+                        {
                             String dateto = ds.Tables[0].Rows[i]["RangeTo"].ToString().Trim();
                             String datefrom = ds.Tables[0].Rows[i]["range"].ToString().Trim();
                             String shefcode = ds.Tables[0].Rows[i]["Station_Shef_Code"].ToString().Trim();
@@ -174,7 +174,7 @@ namespace Alarm_Services
                                 //call alarm()
                                 if (shefcode != "")
                                 {
-                                    String qryOldFlag2 = "UPDATE public.\"tblAlarm2Sensor\" SET  \"EmailSent\"='true' WHERE \"Validity\"= 1 and \"AlarmType\"='single' and \"ID\"='"+ ds.Tables[0].Rows[i]["ID"] + "'";
+                                    String qryOldFlag2 = "UPDATE public.\"tblAlarm2Sensor\" SET  \"EmailSent\"='true' WHERE \"Validity\"= 1 and \"AlarmType\"='single' and \"ID\"='" + ds.Tables[0].Rows[i]["ID"] + "'";
 
                                     try
                                     {
@@ -187,7 +187,7 @@ namespace Alarm_Services
                             }
 
 
-                       }
+                        }
                     }
                 }
                 catch (Exception exc)
@@ -1362,7 +1362,7 @@ namespace Alarm_Services
                                         alarm = true;
                                         db.ExecuteQuery("update \"tblStationLocation\" set \"AlarmFlag\"='true' where \"StationShefCode\"='" + stnName + "'", "", "", "");
 
-                                        
+
 
                                     }
                                     else
@@ -1372,7 +1372,7 @@ namespace Alarm_Services
                                         //logfile.Flush();
 
                                     }
-                                    
+
                                     if (deadband.Trim() != "")
                                     {
 
@@ -1491,7 +1491,7 @@ namespace Alarm_Services
                                         logfile.Flush();
 
                                     }
-                                    
+
                                     if (deadband.Trim() != "")
                                     {
 
@@ -1593,7 +1593,7 @@ namespace Alarm_Services
                                     {
                                         tosentmail += 1;
                                     }
-                                    
+
                                     if (deadband.Trim() != "")
                                     {
 
@@ -2138,7 +2138,7 @@ namespace Alarm_Services
                                     //creates body of the mail 
                                     combinedBody += "\n\n" + body;
                                     //email(mail, body);// call email() function tosend email to user  
-                                                      //SendMail(lstMailIds, body);
+                                    //SendMail(lstMailIds, body);
                                     ROC_AlarmSent[ID] = CD_RateOfChange;
 
 
@@ -2156,7 +2156,7 @@ namespace Alarm_Services
                                     combinedBody += "\n\n" + body;
                                     //creates body of the mail 
                                     //email(mail, body);// call email() function tosend email to user 
-                                                      // SendMail(lstMailIds, body);
+                                    // SendMail(lstMailIds, body);
                                     ROC_AlarmSent[ID] = CD_RateOfChange;
 
 
@@ -2175,7 +2175,7 @@ namespace Alarm_Services
                             }
                             if (deadband.Trim() != "")
                                 condition[sen_id + "" + stnName] = false;
-                            
+
                         }
                         else
                         {
@@ -2205,7 +2205,7 @@ namespace Alarm_Services
                 WriteToFile("Setting alarm flag to true  for stations " + stnName + " sensor name " + sen_id);
                 logfile.Flush();
             }
-           
+
 
         }
 
@@ -2218,23 +2218,66 @@ namespace Alarm_Services
 
         /* uSed for sending mail to user emailID regarding this sensor values 
          input parameters : mail-> MailId, boby-> Mail body */
+        //public void email(System.Net.Mail.MailMessage mail, String body)
+        //{
+        //    try
+        //    {
+        //        System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+        //        String alarm = ConfigurationManager.ConnectionStrings["Alarm"].ConnectionString;
+        //        WriteToFile(alarm + " " + DateTime.Now);
+        //        logfile.Flush();
+
+        //        if (alarm.Trim().Length == 0)
+        //            return;
+        //        String[] alarm_setting = alarm.Split(';');
+
+
+
+
+        //        string from = alarm_setting[2].Trim();
+
+        //        mail.From = new MailAddress(from);
+
+        //        mail.Subject = "Warning";
+
+        //        mail.Body = body;
+
+        //        SmtpClient smtp = new SmtpClient(alarm_setting[0].Trim());
+
+        //        smtp.Port = Convert.ToInt32(alarm_setting[1].Trim());
+
+        //        smtp.UseDefaultCredentials = false;
+        //        smtp.EnableSsl = true;
+
+        //        smtp.Credentials = new NetworkCredential(from, alarm_setting[3].Trim());
+
+
+
+        //        //send the message 
+        //        WriteToFile("Before Sending email");
+        //        logfile.Flush();
+        //        smtp.Send(mail);
+
+
+        //        WriteToFile("" + DateTime.Now + " - Email sent with body " + body);
+        //        logfile.Flush();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        WriteToFile(ex.Message + "" + DateTime.Now + " - " + ex.Message);
+        //        logfile.Flush();
+        //        WriteToFile(ex.StackTrace + "" + DateTime.Now + " - " + ex.Message);
+        //        logfile.Flush();
+        //    }
+        //}
+
         public void email(System.Net.Mail.MailMessage mail, String body)
         {
             try
             {
-                //writing the mail to logofile to check the process and data which we are sending thorugh email
-
-
-                //WriteToFile(mail.To.ToString());
-                //logfile.Flush();
-
-                //WriteToFile(body);
-                //logfile.Flush();
-                // to = "zeeshanrazak@gmail.com";
-                //string from = ConfigurationManager.ConnectionStrings["email"].ConnectionString;
-                //string sm= ConfigurationManager.ConnectionStrings["smtp"].ConnectionString;
-                //int po=Convert.ToInt32(ConfigurationManager.ConnectionStrings["port"].ConnectionString);
-                //string pass= ConfigurationManager.ConnectionStrings["pass"].ConnectionString;
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                 String alarm = ConfigurationManager.ConnectionStrings["Alarm"].ConnectionString;
                 WriteToFile(alarm + " " + DateTime.Now);
                 logfile.Flush();
@@ -2242,60 +2285,41 @@ namespace Alarm_Services
                 if (alarm.Trim().Length == 0)
                     return;
                 String[] alarm_setting = alarm.Split(';');
-                //for (int i = 0; i < alarm_setting.Length; i++)
-                //{
-                //    logfile.WriteLine(alarm_setting[i]);
-                //    logfile.Flush();
-                //}
 
 
-                //string from = "kyocera@southfeather.com";
+                MailMessage msg = new MailMessage();
+
                 string from = alarm_setting[2].Trim();
-                //create the mail message
 
-                //set the FROM address
                 mail.From = new MailAddress(from);
-                //set the RECIPIENTS
-                //mail.To.Add(to);
-                //enter a SUBJECT
+
                 mail.Subject = "Warning";
-                //Enter the message BODY
+
                 mail.Body = body;
-                //"Alarm Email for Station " + stnName + " Current Value of this Station at sensor " + sensor + " is :" + values;
+                
+                //msg.From = new MailAddress("anju@gisfy.co.in");
+                //msg.To.Add(new MailAddress("manoj@gisfy.co.in"));
+                //msg.To.Add(new MailAddress("anjumathew270@gmail.com"));
 
-                //set the mail server (default should be smtp.1and1.com)
-                //SmtpClient smtp = new SmtpClient("smtp.southfeather.com");
-                SmtpClient smtp = new SmtpClient(alarm_setting[0].Trim());
-                //SmtpClient smtp = new SmtpClient(sm);
-                //Enter your full e-mail address and password
-                //smtp.Port = 25;
-                smtp.Port = Convert.ToInt32(alarm_setting[1].Trim());
-                // smtp.Port = po;
-                smtp.UseDefaultCredentials = false;
-                smtp.EnableSsl = true;
-
-                smtp.Credentials = new NetworkCredential(from, alarm_setting[3].Trim());
-                //smtp.Credentials = new NetworkCredential(from, pass);
-
-
-                //send the message 
-                WriteToFile("Before Sending email");
-                logfile.Flush();
-                smtp.Send(mail);
-
-
-                WriteToFile("" + DateTime.Now + " - Email sent with body " + body);
-                logfile.Flush();
-
+                //msg.Subject = "Your Subject Name";
+               
+                //msg.Body = body;
+                //Attachment attach = new Attachment(Server.MapPath("folder/" + ImgName));
+                //msg.Attachments.Add(attach);
+                SmtpClient SmtpClient = new SmtpClient();
+                SmtpClient.Credentials = new NetworkCredential(from, alarm_setting[3].Trim());
+                SmtpClient.Host = "smtp.office365.com";
+                SmtpClient.Port = 587;
+                SmtpClient.EnableSsl = true;
+                SmtpClient.Send(mail);
             }
             catch (Exception ex)
             {
-                WriteToFile(ex.Message + "" + DateTime.Now + " - " + ex.Message);
-                logfile.Flush();
-                WriteToFile(ex.StackTrace + "" + DateTime.Now + " - " + ex.Message);
-                logfile.Flush();
+
+                throw;
             }
         }
+
 
         public void SendMail(List<string> ToMail, String body)
         {
